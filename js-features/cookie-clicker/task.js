@@ -3,7 +3,7 @@ const counterElement = document.getElementById('clicker__counter');
 let clickCount = 0;
 let growing = true;
 
-cookieImage.addEventListener('click', () => {
+cookieImage.onclick = function() {
 	clickCount++;
 	counterElement.textContent = clickCount;
 
@@ -14,4 +14,4 @@ cookieImage.addEventListener('click', () => {
 	}
 
 	growing = !growing;
-});
+}
