@@ -1,27 +1,62 @@
 document.addEventListener("DOMContentLoaded", function() {
-    let tooltipTriggers = document.querySelectorAll(".has-tooltip");
+	let activeTooltip = null;
 
-    tooltipTriggers.forEach(function(trigger) {
-        trigger.addEventListener("click", function(event) {
-            event.preventDefault();
+	let tooltipTriggers = document.querySelectorAll(".has-tooltip");
 
-            let tooltipText = trigger.getAttribute("title");
+	tooltipTriggers.forEach(function(trigger) {
+		trigger.addEventListener("click", function(event) {
+			event.preventDefault();
 
-            let tooltipElement = document.createElement("div");
-            tooltipElement.className = "tooltip";
-            tooltipElement.textContent = tooltipText;
+			let tooltipText = trigger.getAttribute("title");
 
-            let triggerRect = trigger.getBoundingClientRect();
-            tooltipElement.style.left = triggerRect.left + "px";
-            tooltipElement.style.top = triggerRect.bottom + "px";
+			if (activeTooltip && activeTooltip.trigger === trigger) {
+				activeTooltip.tooltip.classList.remove("tooltip_active");
+				activeTooltip = null;
+			} else {
+				if (activeTooltip) {
+					activeTooltip.tooltip.classList.remove("tooltip_active");
+				}
 
-            document.body.appendChild(tooltipElement);
+				let tooltipElement = document.createElement("div");
+				tooltipElement.className = "tooltip";
+				tooltipElement.innerHTML = `<div>${tooltipText}</div>`;
 
-            tooltipElement.classList.add("tooltip_active");
+				document.body.appendChild(tooltipElement);
 
-            setTimeout(function() {
-                document.body.removeChild(tooltipElement);
-            }, 1500);
-        });
-    });
+				positionTooltip(trigger, tooltipElement);
+
+				activeTooltip = {
+					trigger: trigger,
+					tooltip: tooltipElement
+				};
+
+				tooltipElement.classList.add("tooltip_active");
+			}
+		});
+	});
+
+	document.body.addEventListener("click", function(event) {
+		if (activeTooltip && !event.target.classList.contains("has-tooltip")) {
+			activeTooltip.tooltip.classList.remove("tooltip_active");
+			activeTooltip = null;
+		}
+	});
+
+	window.addEventListener("resize", function() {
+		if (activeTooltip) {
+			positionTooltip(activeTooltip.trigger, activeTooltip.tooltip);
+		}
+	});
+
+	window.addEventListener("scroll", function() {
+		if (activeTooltip) {
+			positionTooltip(activeTooltip.trigger, activeTooltip.tooltip);
+		}
+	});
+
+	function positionTooltip(trigger, tooltip) {
+		let triggerRect = trigger.getBoundingClientRect();
+		tooltip.style.left = `${triggerRect.left}px`;
+		tooltip.style.top = `${triggerRect.bottom}px`;
+	}
 });
