@@ -1,38 +1,22 @@
 document.addEventListener("DOMContentLoaded", function() {
-	let taskInput = document.getElementById("task__input");
-	let taskList = document.getElementById("tasks__list");
-	let addTaskButton = document.getElementById("tasks__add");
-	let form = document.getElementById("tasks__form");
+	const taskInput = document.getElementById("task__input");
+	const taskList = document.getElementById("tasks__list");
+	const addTaskButton = document.getElementById("tasks__add");
+	const form = document.getElementById("tasks__form");
 
 	function createTaskElement(taskText) {
-		let taskElement = document.createElement("div");
-		taskElement.className = "task";
-
-		let taskTitle = document.createElement("div");
-		taskTitle.className = "task__title";
-		taskTitle.textContent = taskText;
-
-		let removeButton = document.createElement("a");
-		removeButton.href = "#";
-		removeButton.className = "task__remove";
-		removeButton.textContent = "×";
-
-		removeButton.addEventListener("click", function(event) {
-			event.preventDefault();
-			taskList.removeChild(taskElement);
-		});
-
-		taskElement.appendChild(taskTitle);
-		taskElement.appendChild(removeButton);
-
-		return taskElement;
+		return `
+		<div class="task">
+		  <div class="task__title">${taskText}</div>
+		  <a href="#" class="task__remove">&times;</a>
+		</div>
+	  `;
 	}
 
 	function addTask() {
-		let taskText = taskInput.value.trim();
+		const taskText = taskInput.value.trim();
 		if (taskText !== "") {
-			let taskElement = createTaskElement(taskText);
-			taskList.appendChild(taskElement);
+			taskList.insertAdjacentHTML("beforeend", createTaskElement(taskText));
 			taskInput.value = "";
 		}
 	}
@@ -42,10 +26,16 @@ document.addEventListener("DOMContentLoaded", function() {
 		addTask();
 	});
 
-	form.addEventListener("keypress", function(event) {
-		if (event.key === "Enter") {
+	form.addEventListener("submit", function(event) {
+		event.preventDefault();
+		addTask();
+	});
+
+	taskList.addEventListener("click", function(event) {
+		if (event.target.classList.contains("task__remove")) {
 			event.preventDefault();
-			addTask();
+			const taskElement = event.target.closest(".task");
+			taskList.removeChild(taskElement);
 		}
 	});
 });
