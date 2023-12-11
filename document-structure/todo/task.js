@@ -26,11 +26,6 @@ document.addEventListener("DOMContentLoaded", function() {
 		addTask();
 	});
 
-	form.addEventListener("submit", function(event) {
-		event.preventDefault();
-		addTask();
-	});
-
 	taskList.addEventListener("click", function(event) {
 		if (event.target.classList.contains("task__remove")) {
 			event.preventDefault();
