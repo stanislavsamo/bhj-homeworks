@@ -1,4 +1,8 @@
 document.addEventListener("DOMContentLoaded", function() {
+	let tooltipElement = document.createElement("div");
+	tooltipElement.className = "tooltip";
+	document.body.appendChild(tooltipElement);
+
 	let activeTooltip = null;
 
 	let tooltipTriggers = document.querySelectorAll(".has-tooltip");
@@ -17,20 +21,16 @@ document.addEventListener("DOMContentLoaded", function() {
 					activeTooltip.tooltip.classList.remove("tooltip_active");
 				}
 
-				let tooltipElement = document.createElement("div");
-				tooltipElement.className = "tooltip";
 				tooltipElement.innerHTML = `<div>${tooltipText}</div>`;
 
-				document.body.appendChild(tooltipElement);
-
 				positionTooltip(trigger, tooltipElement);
+
+				tooltipElement.classList.add("tooltip_active");
 
 				activeTooltip = {
 					trigger: trigger,
 					tooltip: tooltipElement
 				};
-
-				tooltipElement.classList.add("tooltip_active");
 			}
 		});
 	});
